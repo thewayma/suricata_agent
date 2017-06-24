@@ -4,10 +4,11 @@ import (
     "fmt"
     "os"
     "net"
-    "encoding/json"
+    //"encoding/json"
     "github.com/thewayma/suricata_agent_go/g"
 )
 
+/*
 type Version struct {
     Version string `json:"version"`
 }
@@ -15,9 +16,11 @@ type Version struct {
 type Command struct {
     Command string `json:"command"`
 }
+*/
 
 var (
     protocolMap map[string]string
+    buf = make([]byte, 1024)
 )
 
 func init() {
@@ -26,62 +29,47 @@ func init() {
     protocolMap["command"] = `{"command": "%s"}`
 }
 
-func suriConnect(sock string) (net.Conn, error) {
-    return nil, nil
+func suriConnect() net.Conn {
+    conn, err := net.Dial("unix", g.Config().UnixSockFile)
+    //g.checkError(err)
+    if err != nil {
+        fmt.Printf("Unix File %s not found\n", g.Config().UnixSockFile)
+        os.Exit(-1)
+    }
+
+    return conn
 }
 
-func suriMakeCommand(com string) string {
+func suriMakeCommand(conn net.Conn, com string) string {
     return fmt.Sprintf(protocolMap["command"], com)
 }
 
-func suriSendCommand(data []byte) {
+func suriSendVersion(conn net.Conn) {
+    fmt.Printf("SND: %s\n", protocolMap["version"])
+    conn.Write([]byte(protocolMap["version"]))
 
+    conn.Read(buf)
+    fmt.Printf("RCV: %s\n", buf)
+
+    //!< TODO: OK, NOK
+}
+
+func suriSendCommand(conn net.Conn, data string) {
+    conn.Write([]byte(data))
+    fmt.Printf("SND: %s\n", data)
+
+    conn.Read(buf)
+    fmt.Printf("RCV: %s\n", buf)
+
+    //!< TODO: OK,NOK; 提取结果
 }
 
 
 func GetUptime() {
-    unixSockFile := g.Config().UnixSockFile
-    //fmt.Println(unixSockFile)
-
-    conn, err := net.Dial("unix", unixSockFile)
-    if err != nil {
-        fmt.Printf("Unix File %s not found\n", unixSockFile)
-        os.Exit(-1)
-    }
+    conn := suriConnect()
     defer conn.Close()
 
-    //fmt.Printf("Unix Socket %s Connection Ok\n", unixSockFile)
-
-
-
-
-    buf := make([]byte,1024)
-
-    ver := Version{Version: "0.1"}
-    data, err := json.Marshal(ver)
-    if err != nil {
-        fmt.Printf("JSON marshaling failed: %s", err)
-    }
-    fmt.Printf("%s\n", data)
-
-    conn.Write([]byte(data))
-
-    conn.Read(buf)
-    fmt.Printf("%s\n", buf)
-
-
-    ver1 := Command{Command: "uptime"}
-    data1, err := json.Marshal(ver1)
-    if err != nil {
-        fmt.Printf("JSON marshaling failed: %s", err)
-    }
-    fmt.Printf("%s\n", data1)
-
-    conn.Write([]byte(data1))
-
-    conn.Read(buf)
-    fmt.Printf("%s\n", buf)
-
-
-
+    suriSendVersion(conn)
+    com := suriMakeCommand(conn, "uptime")
+    suriSendCommand(conn, com)
 }
