@@ -5,6 +5,7 @@ import (
     "os"
     "net"
     "encoding/json"
+    "github.com/thewayma/suricata_agent_go/g"
 )
 
 type Version struct {
@@ -15,7 +16,31 @@ type Command struct {
     Command string `json:"command"`
 }
 
-func GetUptime(unixSockFile string) {
+var (
+    protocolMap map[string]string
+)
+
+func init() {
+    protocolMap = make(map[string]string)
+    protocolMap["version"] = `{"version": "0.1"}`
+    protocolMap["command"] = `{"command": "%s"}`
+}
+
+func suriConnect(sock string) (net.Conn, error) {
+    return nil, nil
+}
+
+func suriMakeCommand(com string) string {
+    return fmt.Sprintf(protocolMap["command"], com)
+}
+
+func suriSendCommand(data []byte) {
+
+}
+
+
+func GetUptime() {
+    unixSockFile := g.Config().UnixSockFile
     //fmt.Println(unixSockFile)
 
     conn, err := net.Dial("unix", unixSockFile)
