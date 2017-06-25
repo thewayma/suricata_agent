@@ -10,13 +10,13 @@ import (
 
 var (
     ConfigFile string
-    UnixSockFile string = "/tmp/suricata-bin/var/run/suricata/suricata-command.socket"
     config *GlobalConfig
     lock = new(sync.RWMutex)
 )
 
 type GlobalConfig struct {
-    UnixSockFile string
+    Debug           bool
+    UnixSockFile    string
 }
 
 func Config() *GlobalConfig {
@@ -24,8 +24,6 @@ func Config() *GlobalConfig {
     defer lock.RUnlock()
     return config
 }
-
-
 
 func ParseConfig(cfg string) {
     if cfg == "" {

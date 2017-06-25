@@ -1,3 +1,4 @@
 {
+    "Debug": "true",
     "UnixSockFile": "/tmp/suricata-bin/var/run/suricata/suricata-command.socket"
 }

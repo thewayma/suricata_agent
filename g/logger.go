@@ -1,7 +1,8 @@
 package g
 
-import log "github.com/Sirupsen/logrus"
+import log "github.com/sirupsen/logrus"
 
+//!< Debug, Info, Warn, Error, Fatal 日志级别由低到高
 func InitLog(level string) (err error) {
     switch level {
     case "info":
