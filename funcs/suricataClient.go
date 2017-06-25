@@ -6,6 +6,7 @@ import (
     "net"
     //"encoding/json"
     "github.com/thewayma/suricata_agent_go/g"
+    "github.com/antonholmquist/jason"
 )
 
 /*
@@ -54,22 +55,28 @@ func suriSendVersion(conn net.Conn) {
     //!< TODO: OK, NOK
 }
 
-func suriSendCommand(conn net.Conn, data string) {
+func suriSendCommand(conn net.Conn, data string) (int64, error) {
     conn.Write([]byte(data))
     fmt.Printf("SND: %s\n", data)
 
     conn.Read(buf)
     fmt.Printf("RCV: %s\n", buf)
 
+    j, _ := jason.NewObjectFromBytes([]byte(buf))
+    return j.GetInt64("message")
+
     //!< TODO: OK,NOK; 提取结果
 }
 
 
-func GetUptime() {
+func GetUptime() []*g.MetricValue {
     conn := suriConnect()
     defer conn.Close()
 
     suriSendVersion(conn)
     com := suriMakeCommand(conn, "uptime")
-    suriSendCommand(conn, com)
+    ret, _ := suriSendCommand(conn, com)
+
+    fmt.Println("Uptime:", g.GaugeValue("suricata_uptime", ret))
+    return []*g.MetricValue{g.GaugeValue("suricata_uptime", ret)}
 }

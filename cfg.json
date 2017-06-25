@@ -1,4 +1,14 @@
 {
-    "Debug": "true",
-    "UnixSockFile": "/tmp/suricata-bin/var/run/suricata/suricata-command.socket"
+    "Hostname": "JIDS_Agent",
+    "Ip": "10.12.209.156",
+    "Debug": true,
+    "UnixSockFile": "/tmp/suricata-bin/var/run/suricata/suricata-command.socket",
+    "Transfer": {
+        "Enabled": true,
+        "Tpye": "Redis",
+        "Addrs": [
+            "127.0.0.1:6379"
+        ],
+        "Interval": 1
+    }
 }

@@ -1,6 +1,7 @@
 package g
 
 import (
+	//"os"
     "log"
     "sync"
     "encoding/json"
@@ -14,9 +15,19 @@ var (
     lock = new(sync.RWMutex)
 )
 
+type TransferConfig struct {
+    Enabled  bool
+	Type	 string     //!< localFile, Redis, RPC, MQ
+    Addrs    []string   //!< file,      ip:port
+    Interval int        //!< 监控采集周期 
+}
+
 type GlobalConfig struct {
+	Hostname		string
+	Ip				string
     Debug           bool
     UnixSockFile    string
+	Transfer		*TransferConfig
 }
 
 func Config() *GlobalConfig {
@@ -24,6 +35,34 @@ func Config() *GlobalConfig {
     defer lock.RUnlock()
     return config
 }
+
+/*
+func Hostname() (string, error) {
+    hostname := Config().Hostname
+    if hostname != "" {
+        return hostname, nil
+    }
+
+    hostname, err := os.Hostname()
+    if err != nil {
+        log.Println("ERROR: os.Hostname() fail", err)
+    }
+    return hostname, err
+}
+
+func IP() string {
+    ip := Config().IP
+    if ip != "" {
+        // use ip in configuration
+        return ip
+    }
+
+    if len(LocalIp) > 0 {
+        ip = LocalIp
+    }
+
+    return ip
+}*/
 
 func ParseConfig(cfg string) {
     if cfg == "" {
