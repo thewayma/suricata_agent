@@ -4,9 +4,9 @@ import (
     "os"
     "fmt"
     "flag"
-    "github.com/thewayma/suricata_agent_go/g"
-    "github.com/thewayma/suricata_agent_go/funcs"
-    //"github.com/thewayma/suricata_agent_go/cron"
+    "github.com/thewayma/suricata_agent/g"
+    "github.com/thewayma/suricata_agent/funcs"
+    //"github.com/thewayma/suricata_agent/cron"
 )
 
 func main() {

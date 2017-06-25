@@ -1,7 +1,7 @@
 package funcs
 
 import (
-    "github.com/thewayma/suricata_agent_go/g"
+    "github.com/thewayma/suricata_agent/g"
 )
 
 type FuncsAndInterval struct {

@@ -5,7 +5,7 @@ import (
     "os"
     "net"
     //"encoding/json"
-    "github.com/thewayma/suricata_agent_go/g"
+    "github.com/thewayma/suricata_agent/g"
     "github.com/antonholmquist/jason"
 )
 
