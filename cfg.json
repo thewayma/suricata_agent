@@ -9,7 +9,7 @@
     },
     "Transfer": {
         "Enabled": true,
-        "Tpye": "Redis",
+        "Type": "Redis",
         "Addrs": [
             "127.0.0.1:6379"
         ],
