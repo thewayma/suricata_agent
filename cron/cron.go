@@ -30,6 +30,7 @@ func collect(sec int64, fns []func() []*g.MetricValue) {
 		if err != nil {
 			continue
 		}
+        ip := g.IP()
 
 		mvs := []*g.MetricValue{}
 
@@ -51,7 +52,7 @@ func collect(sec int64, fns []func() []*g.MetricValue) {
 		now := time.Now().Unix()
 		for j := 0; j < len(mvs); j++ {
 			mvs[j].Step = sec
-			mvs[j].Endpoint = hostname
+			mvs[j].Endpoint = fmt.Sprintf("%s_%s", hostname, ip)
 			mvs[j].Timestamp = now
 		}
 

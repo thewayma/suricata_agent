@@ -46,21 +46,21 @@ func suriMakeCommand(conn net.Conn, com string) string {
 }
 
 func suriSendVersion(conn net.Conn) {
-    fmt.Printf("SND: %s\n", protocolMap["version"])
+    //fmt.Printf("SND: %s\n", protocolMap["version"])
     conn.Write([]byte(protocolMap["version"]))
 
     conn.Read(buf)
-    fmt.Printf("RCV: %s\n", buf)
+    //fmt.Printf("RCV: %s\n", buf)
 
     //!< TODO: OK, NOK
 }
 
 func suriSendCommand(conn net.Conn, data string) (int64, error) {
     conn.Write([]byte(data))
-    fmt.Printf("SND: %s\n", data)
+    //fmt.Printf("SND: %s\n", data)
 
     conn.Read(buf)
-    fmt.Printf("RCV: %s\n", buf)
+    //fmt.Printf("RCV: %s\n", buf)
 
     //!< TODO: OK,NOK; 提取结果
     j, _ := jason.NewObjectFromBytes([]byte(buf))
@@ -75,6 +75,6 @@ func GetUptime() []*g.MetricValue {
     com := suriMakeCommand(conn, "uptime")
     ret, _ := suriSendCommand(conn, com)
 
-    fmt.Println("Uptime:", g.GaugeValue("suricata_uptime", ret))
+    //fmt.Println("Uptime:", g.GaugeValue("suricata_uptime", ret))
     return []*g.MetricValue{g.GaugeValue("suricata_uptime", ret)}
 }
