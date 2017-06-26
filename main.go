@@ -23,15 +23,10 @@ func main() {
 
     g.ParseConfig(*cfg)
 
-    if g.Config().Debug {
-        g.InitLog("debug")
-    } else {
-        g.InitLog("info")
-    }
-
-    //funcs.GetUptime()
+    g.InitLog()
 
     funcs.BuildMappers()
+
     cron.Collect()
 
     select {}

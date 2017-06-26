@@ -3,6 +3,8 @@ package cron
 import (
     "fmt"
     "time"
+    //"log"
+    log "github.com/sirupsen/logrus"
     "github.com/thewayma/suricata_agent/g"
     "github.com/thewayma/suricata_agent/funcs"
 )
@@ -57,6 +59,6 @@ func collect(sec int64, fns []func() []*g.MetricValue) {
 		}
 
 		//g.SendToTransfer(mvs)
-        fmt.Println("Cron:", mvs)
+        log.Debug("Cron:", mvs)
 	}
 }

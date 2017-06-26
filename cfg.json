@@ -1,8 +1,12 @@
 {
     "Hostname": "JIDS_Agent",
     "Ip": "10.12.209.156",
-    "Debug": true,
     "UnixSockFile": "/tmp/suricata-bin/var/run/suricata/suricata-command.socket",
+    "Log": {
+        "LogLevel": "debug",
+        "Output": "tty",
+        "Type": "text"
+    },
     "Transfer": {
         "Enabled": true,
         "Tpye": "Redis",

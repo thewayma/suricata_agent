@@ -19,6 +19,12 @@ var (
     lock = new(sync.RWMutex)
 )
 
+type LogConfig struct {
+    LogLevel string     //!< debug, info, warn, error, fatal 日志级别由低到高
+    Output   string     //!< tty, file
+    Type     string     //!< text, json
+}
+
 type TransferConfig struct {
     Enabled  bool
 	Type	 string     //!< localFile, Redis, RPC, MQ
@@ -29,8 +35,8 @@ type TransferConfig struct {
 type GlobalConfig struct {
 	Hostname		string
 	Ip				string
-    Debug           bool
     UnixSockFile    string
+    Log             *LogConfig
 	Transfer		*TransferConfig
 }
 
