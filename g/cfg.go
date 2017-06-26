@@ -1,15 +1,19 @@
 package g
 
 import (
-	//"os"
+	"os"
+    "net"
     "log"
     "sync"
+    "time"
+    "strings"
     "encoding/json"
 
     "github.com/toolkits/file"
 )
 
 var (
+	LocalIp string
     ConfigFile string
     config *GlobalConfig
     lock = new(sync.RWMutex)
@@ -30,13 +34,26 @@ type GlobalConfig struct {
 	Transfer		*TransferConfig
 }
 
+func InitLocalIp() {
+    if Config().Transfer.Enabled {
+        conn, err := net.DialTimeout("tcp", Config().Transfer.Addrs[0], time.Second*10)
+        if err != nil {
+            log.Println("get local addr failed !")
+        } else {
+            LocalIp = strings.Split(conn.LocalAddr().String(), ":")[0]
+            conn.Close()
+        }
+    } else {
+        log.Println("hearbeat is not enabled, can't get localip")
+    }
+}
+
 func Config() *GlobalConfig {
     lock.RLock()
     defer lock.RUnlock()
     return config
 }
 
-/*
 func Hostname() (string, error) {
     hostname := Config().Hostname
     if hostname != "" {
@@ -51,7 +68,7 @@ func Hostname() (string, error) {
 }
 
 func IP() string {
-    ip := Config().IP
+    ip := Config().Ip
     if ip != "" {
         // use ip in configuration
         return ip
@@ -62,7 +79,7 @@ func IP() string {
     }
 
     return ip
-}*/
+}
 
 func ParseConfig(cfg string) {
     if cfg == "" {

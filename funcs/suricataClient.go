@@ -62,12 +62,10 @@ func suriSendCommand(conn net.Conn, data string) (int64, error) {
     conn.Read(buf)
     fmt.Printf("RCV: %s\n", buf)
 
+    //!< TODO: OK,NOK; 提取结果
     j, _ := jason.NewObjectFromBytes([]byte(buf))
     return j.GetInt64("message")
-
-    //!< TODO: OK,NOK; 提取结果
 }
-
 
 func GetUptime() []*g.MetricValue {
     conn := suriConnect()

@@ -4,9 +4,10 @@ import (
     "os"
     "fmt"
     "flag"
+
     "github.com/thewayma/suricata_agent/g"
     "github.com/thewayma/suricata_agent/funcs"
-    //"github.com/thewayma/suricata_agent/cron"
+    "github.com/thewayma/suricata_agent/cron"
 )
 
 func main() {
@@ -28,6 +29,10 @@ func main() {
         g.InitLog("info")
     }
 
-    funcs.GetUptime()
+    //funcs.GetUptime()
 
+    funcs.BuildMappers()
+    cron.Collect()
+
+    select {}
 }
