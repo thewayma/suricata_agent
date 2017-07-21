@@ -12,7 +12,6 @@ var (
     protocolMap map[string]string
     buf = make([]byte, 1024)
 
-    maxPortNum int
     ifaceMap map[int]string     //!< portId <-> portName
 )
 
@@ -20,8 +19,8 @@ func init() {
     protocolMap = make(map[string]string)
     protocolMap["version"] = `{"version": "0.1"}`
     protocolMap["command"] = `{"command": "%s"}`
+    protocolMap["commandArgument"] = `{"command": "%s", "arguments": {"%s": "%s"}}`
 
-    maxPortNum = 16
     ifaceMap = make(map[int]string)
 }
 
@@ -36,8 +35,12 @@ func suriConnect() net.Conn {
     return conn
 }
 
-func suriMakeCommand(conn net.Conn, com string) string {
+func suriMakeCommand(com string) string {
     return fmt.Sprintf(protocolMap["command"], com)
+}
+
+func suriMakeCommandArgument(com, argKey, argValue string) string {
+    return fmt.Sprintf(protocolMap["commandArgument"], com, argKey, argValue)
 }
 
 func suriSendVersion(conn net.Conn) {
@@ -83,7 +86,7 @@ func suriSendCommandGetString(conn net.Conn, data string) (string, error) {
     }
 }
 
-func suriSendCommandGetIface(conn net.Conn, data string) (string, error) {
+func suriSendCommandGetIface(conn net.Conn, data string) (interface{}, error) {
     conn.Write([]byte(data))
     //fmt.Printf("SND: %s\n", data)
 
@@ -98,13 +101,30 @@ func suriSendCommandGetIface(conn net.Conn, data string) (string, error) {
 
         for index, dataItem := range ifaceObj {
             ifaceMap[index] = dataItem
-
+            com := suriMakeCommandArgument("iface-stat", "iface", dataItem)
+            suriSendCommandGetIfaceStat(conn, com)
         }
 
+        return ifaceMap, nil
 
+    } else {
+        return "error", fmt.Errorf("%s Command Error", data)
+    }
+}
 
-        return "11", nil
+func suriSendCommandGetIfaceStat(conn net.Conn, data string) (interface{}, error) {
+    conn.Write([]byte(data))
+    //fmt.Printf("SND: %s\n", data)
 
+    conn.Read(buf)
+    //fmt.Printf("RCV: %s\n", buf)
+
+    j, _ := jason.NewObjectFromBytes([]byte(buf))
+
+    if res, _ := j.GetString("return"); res == "OK" {
+        messObj, _ := j.GetObject("message")
+        fmt.Println(messObj)
+        return j.GetObject("message")
     } else {
         return "error", fmt.Errorf("%s Command Error", data)
     }
@@ -116,7 +136,7 @@ func GetUptime() []*g.MetricValue {
     defer conn.Close()
 
     suriSendVersion(conn)
-    com := suriMakeCommand(conn, "uptime")
+    com := suriMakeCommand("uptime")
     ret, _ := suriSendCommandGetInt(conn, com)
 
     //fmt.Println("Uptime:", g.GaugeValue("suricata_uptime", ret))
@@ -129,7 +149,7 @@ func ShutDown() {
     defer conn.Close()
 
     suriSendVersion(conn)
-    com := suriMakeCommand(conn, "shutdown")
+    com := suriMakeCommand("shutdown")
     ret, _ := suriSendCommandGetString(conn, com)
 
     fmt.Println(ret)
@@ -140,7 +160,7 @@ func ReloadRules() {
     defer conn.Close()
 
     suriSendVersion(conn)
-    com := suriMakeCommand(conn, "reload-rules")
+    com := suriMakeCommand("reload-rules")
     ret, _ := suriSendCommandGetString(conn, com)
 
     fmt.Println(ret)
@@ -151,7 +171,7 @@ func GetVersion() {
     defer conn.Close()
 
     suriSendVersion(conn)
-    com := suriMakeCommand(conn, "version")
+    com := suriMakeCommand("version")
     ret, _ := suriSendCommandGetString(conn, com)
 
     fmt.Println(ret)
@@ -162,7 +182,7 @@ func GetRunningMode() {
     defer conn.Close()
 
     suriSendVersion(conn)
-    com := suriMakeCommand(conn, "running-mode")
+    com := suriMakeCommand("running-mode")
     ret, _ := suriSendCommandGetString(conn, com)
 
     fmt.Println(ret)
@@ -173,7 +193,7 @@ func GetCaptureMode() {
     defer conn.Close()
 
     suriSendVersion(conn)
-    com := suriMakeCommand(conn, "capture-mode")
+    com := suriMakeCommand("capture-mode")
     ret, _ := suriSendCommandGetString(conn, com)
 
     fmt.Println(ret)
@@ -184,7 +204,7 @@ func GetProfilingCouters() {
     defer conn.Close()
 
     suriSendVersion(conn)
-    com := suriMakeCommand(conn, "dump-counters")
+    com := suriMakeCommand("dump-counters")
 
     conn.Write([]byte(com))
 
@@ -199,7 +219,7 @@ func GetAllPortStats() {
     defer conn.Close()
 
     suriSendVersion(conn)
-    com := suriMakeCommand(conn, "iface-list")
+    com := suriMakeCommand("iface-list")
 
     suriSendCommandGetIface(conn, com)
 
