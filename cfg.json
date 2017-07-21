@@ -8,7 +8,7 @@
         "Type": "text"
     },
     "Transfer": {
-        "Enabled": true,
+        "Enabled": false,
         "Type": "Redis",
         "Addrs": [
             "127.0.0.1:6379"

@@ -29,5 +29,8 @@ func main() {
 
     cron.Collect()
 
+    //!< commandTest
+    funcs.GetAllPortStats()
+
     select {}
 }
