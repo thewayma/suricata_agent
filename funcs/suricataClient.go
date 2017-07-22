@@ -55,10 +55,10 @@ func suriSendVersion(conn net.Conn) {
 
 func suriSendCommandGet(conn net.Conn, data string) (interface{}, error) {
     conn.Write([]byte(data))
-    fmt.Printf("SND: %s\n", data)
+    //fmt.Printf("SND: %s\n", data)
 
     conn.Read(buf)
-    fmt.Printf("RCV: %s\n", buf)
+    //fmt.Printf("RCV: %s\n", buf)
 
     j, _ := jason.NewObjectFromBytes([]byte(buf))
 
@@ -66,51 +66,6 @@ func suriSendCommandGet(conn net.Conn, data string) (interface{}, error) {
         return j, nil
     } else {
         return -299, fmt.Errorf("%s Command Error", data)
-    }
-
-}
-
-func suriSendCommandGetIface(conn net.Conn, data string) (interface{}, error) {
-    conn.Write([]byte(data))
-    //fmt.Printf("SND: %s\n", data)
-
-    conn.Read(buf)
-    //fmt.Printf("RCV: %s\n", buf)
-
-    j, _ := jason.NewObjectFromBytes([]byte(buf))
-
-    if res, _ := j.GetString("return"); res == "OK" {
-        messObj, _ := j.GetObject("message")
-        ifaceObj, _ := messObj.GetStringArray("ifaces")
-
-        for index, dataItem := range ifaceObj {
-            ifaceMap[index] = dataItem
-            com := suriMakeCommandArgument("iface-stat", "iface", dataItem)
-            suriSendCommandGetIfaceStat(conn, com)
-        }
-
-        return ifaceMap, nil
-
-    } else {
-        return "error", fmt.Errorf("%s Command Error", data)
-    }
-}
-
-func suriSendCommandGetIfaceStat(conn net.Conn, data string) (interface{}, error) {
-    conn.Write([]byte(data))
-    //fmt.Printf("SND: %s\n", data)
-
-    conn.Read(buf)
-    //fmt.Printf("RCV: %s\n", buf)
-
-    j, _ := jason.NewObjectFromBytes([]byte(buf))
-
-    if res, _ := j.GetString("return"); res == "OK" {
-        messObj, _ := j.GetObject("message")
-        fmt.Println(messObj)
-        return j.GetObject("message")
-    } else {
-        return "error", fmt.Errorf("%s Command Error", data)
     }
 }
 
@@ -120,6 +75,7 @@ func GetUptime() []*g.MetricValue {
     defer conn.Close()
 
     suriSendVersion(conn)
+
     com := suriMakeCommand("uptime")
     //ret, _ := suriSendCommandGetInt(conn, com)
     ret, _ := suriSendCommandGet(conn, com)
@@ -136,6 +92,7 @@ func ShutDown() {
     defer conn.Close()
 
     suriSendVersion(conn)
+
     com := suriMakeCommand("shutdown")
     ret, _ := suriSendCommandGet(conn, com)
     obj := ret.(*jason.Object)
@@ -149,6 +106,7 @@ func ReloadRules() {
     defer conn.Close()
 
     suriSendVersion(conn)
+
     com := suriMakeCommand("reload-rules")
     ret, _ := suriSendCommandGet(conn, com)
     obj := ret.(*jason.Object)
@@ -162,6 +120,7 @@ func GetVersion() {
     defer conn.Close()
 
     suriSendVersion(conn)
+
     com := suriMakeCommand("version")
     ret, _ := suriSendCommandGet(conn, com)
     obj := ret.(*jason.Object)
@@ -175,6 +134,7 @@ func GetRunningMode() {
     defer conn.Close()
 
     suriSendVersion(conn)
+
     com := suriMakeCommand("running-mode")
     ret, _ := suriSendCommandGet(conn, com)
     obj := ret.(*jason.Object)
@@ -188,6 +148,7 @@ func GetCaptureMode() {
     defer conn.Close()
 
     suriSendVersion(conn)
+
     com := suriMakeCommand("capture-mode")
     ret, _ := suriSendCommandGet(conn, com)
     obj := ret.(*jason.Object)
@@ -201,8 +162,8 @@ func GetProfilingCouters() {
     defer conn.Close()
 
     suriSendVersion(conn)
-    com := suriMakeCommand("dump-counters")
 
+    com := suriMakeCommand("dump-counters")
     conn.Write([]byte(com))
 
     buf = make([]byte, 10240)
@@ -216,7 +177,28 @@ func GetAllPortStats() {
     defer conn.Close()
 
     suriSendVersion(conn)
-    com := suriMakeCommand("iface-list")
 
-    suriSendCommandGetIface(conn, com)
+    com := suriMakeCommand("iface-list")
+    res, _ := suriSendCommandGet(conn, com)
+
+    obj, _      := res.(*jason.Object)
+    messObj, _  := obj.GetObject("message")
+    ifaceObj, _ := messObj.GetStringArray("ifaces")
+
+    for index, dataItem := range ifaceObj {
+        ifaceMap[index] = dataItem
+        com    := suriMakeCommandArgument("iface-stat", "iface", dataItem)
+        res, _ := suriSendCommandGet(conn, com)
+
+        obj, _     := res.(*jason.Object)
+        messObj, _ := obj.GetObject("message")
+
+        pkts, _    := messObj.GetInt64("pkts")
+        drop, _    := messObj.GetInt64("drop")
+        invalid, _ := messObj.GetInt64("invalid-checksums")
+
+        fmt.Printf("Iface:%s, pkt=%d, drop=%d, invalid-checksums=%d\n", dataItem, pkts, drop, invalid)
+    }
+
+
 }

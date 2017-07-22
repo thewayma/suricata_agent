@@ -36,7 +36,7 @@ func main() {
     funcs.GetUptime()
     funcs.GetAllPortStats()
     funcs.ReloadRules()
-    funcs.ShutDown()
+    //funcs.ShutDown()
 
     select {}
 }
