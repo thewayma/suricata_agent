@@ -53,6 +53,23 @@ func suriSendVersion(conn net.Conn) {
     //!< TODO: OK, NOK
 }
 
+func suriSendCommandGet(conn net.Conn, data string) (interface{}, error) {
+    conn.Write([]byte(data))
+    //fmt.Printf("SND: %s\n", data)
+
+    conn.Read(buf)
+    //fmt.Printf("RCV: %s\n", buf)
+
+    j, _ := jason.NewObjectFromBytes([]byte(buf))
+
+    if res, _ := j.GetString("return"); res == "OK" {
+        return j.GetInt64("message")
+    } else {
+        return -299, fmt.Errorf("%s Command Error", data)
+    }
+
+}
+
 func suriSendCommandGetInt(conn net.Conn, data string) (int64, error) {
     conn.Write([]byte(data))
     //fmt.Printf("SND: %s\n", data)
@@ -137,9 +154,10 @@ func GetUptime() []*g.MetricValue {
 
     suriSendVersion(conn)
     com := suriMakeCommand("uptime")
-    ret, _ := suriSendCommandGetInt(conn, com)
+    //ret, _ := suriSendCommandGetInt(conn, com)
+    ret, _ := suriSendCommandGet(conn, com)
 
-    //fmt.Println("Uptime:", g.GaugeValue("suricata_uptime", ret))
+    fmt.Println("Uptime:", g.GaugeValue("suricata_uptime", ret.(int)))
     return []*g.MetricValue{g.GaugeValue("suricata_uptime", ret)}
 }
 

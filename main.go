@@ -30,6 +30,7 @@ func main() {
     cron.Collect()
 
     //!< commandTest
+    funcs.GetUptime()
     funcs.GetAllPortStats()
 
     select {}
