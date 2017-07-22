@@ -63,7 +63,7 @@ func suriSendCommandGet(conn net.Conn, data string) (interface{}, error) {
     j, _ := jason.NewObjectFromBytes([]byte(buf))
 
     if res, _ := j.GetString("return"); res == "OK" {
-        return j.GetInt64("message")
+        return j.GetObject("message")
     } else {
         return -299, fmt.Errorf("%s Command Error", data)
     }
@@ -156,9 +156,11 @@ func GetUptime() []*g.MetricValue {
     com := suriMakeCommand("uptime")
     //ret, _ := suriSendCommandGetInt(conn, com)
     ret, _ := suriSendCommandGet(conn, com)
+    obj := ret.(*jason.Object)
+    uptime, _ := obj.GetInt64("message")
 
-    //fmt.Println("Uptime:", g.GaugeValue("suricata_uptime", ret.(int64)))
-    return []*g.MetricValue{g.GaugeValue("suricata_uptime", ret.(int64))}
+    //fmt.Println("Uptime:", g.GaugeValue("suricata_uptime", uptime)
+    return []*g.MetricValue{g.GaugeValue("suricata_uptime", uptime)}
 }
 
 //!< 以下为非周期性采集动作
@@ -169,8 +171,10 @@ func ShutDown() {
     suriSendVersion(conn)
     com := suriMakeCommand("shutdown")
     ret, _ := suriSendCommandGet(conn, com)
+    obj := ret.(*jason.Object)
+    str, _ := obj.GetString("message")
 
-    fmt.Println(ret.(string))
+    fmt.Println(str)
 }
 
 func ReloadRules() {
@@ -180,8 +184,10 @@ func ReloadRules() {
     suriSendVersion(conn)
     com := suriMakeCommand("reload-rules")
     ret, _ := suriSendCommandGet(conn, com)
+    obj := ret.(*jason.Object)
+    str, _ := obj.GetString("message")
 
-    fmt.Println(ret.(string))
+    fmt.Println(str)
 }
 
 func GetVersion() {
@@ -191,8 +197,10 @@ func GetVersion() {
     suriSendVersion(conn)
     com := suriMakeCommand("version")
     ret, _ := suriSendCommandGet(conn, com)
+    obj := ret.(*jason.Object)
+    str, _ := obj.GetString("message")
 
-    fmt.Println(ret.(string))
+    fmt.Println(str)
 }
 
 func GetRunningMode() {
@@ -202,8 +210,10 @@ func GetRunningMode() {
     suriSendVersion(conn)
     com := suriMakeCommand("running-mode")
     ret, _ := suriSendCommandGet(conn, com)
+    obj := ret.(*jason.Object)
+    str, _ := obj.GetString("message")
 
-    fmt.Println(ret.(string))
+    fmt.Println(str)
 }
 
 func GetCaptureMode() {
@@ -213,8 +223,10 @@ func GetCaptureMode() {
     suriSendVersion(conn)
     com := suriMakeCommand("capture-mode")
     ret, _ := suriSendCommandGet(conn, com)
+    obj := ret.(*jason.Object)
+    str, _ := obj.GetString("message")
 
-    fmt.Println(ret.(string))
+    fmt.Println(str)
 }
 
 func GetProfilingCouters() {
