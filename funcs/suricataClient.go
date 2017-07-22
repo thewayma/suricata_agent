@@ -157,8 +157,8 @@ func GetUptime() []*g.MetricValue {
     //ret, _ := suriSendCommandGetInt(conn, com)
     ret, _ := suriSendCommandGet(conn, com)
 
-    fmt.Println("Uptime:", g.GaugeValue("suricata_uptime", ret.(int)))
-    return []*g.MetricValue{g.GaugeValue("suricata_uptime", ret)}
+    //fmt.Println("Uptime:", g.GaugeValue("suricata_uptime", ret.(int64)))
+    return []*g.MetricValue{g.GaugeValue("suricata_uptime", ret.(int64))}
 }
 
 //!< 以下为非周期性采集动作
@@ -168,9 +168,9 @@ func ShutDown() {
 
     suriSendVersion(conn)
     com := suriMakeCommand("shutdown")
-    ret, _ := suriSendCommandGetString(conn, com)
+    ret, _ := suriSendCommandGet(conn, com)
 
-    fmt.Println(ret)
+    fmt.Println(ret.(string))
 }
 
 func ReloadRules() {
@@ -179,9 +179,9 @@ func ReloadRules() {
 
     suriSendVersion(conn)
     com := suriMakeCommand("reload-rules")
-    ret, _ := suriSendCommandGetString(conn, com)
+    ret, _ := suriSendCommandGet(conn, com)
 
-    fmt.Println(ret)
+    fmt.Println(ret.(string))
 }
 
 func GetVersion() {
@@ -190,9 +190,9 @@ func GetVersion() {
 
     suriSendVersion(conn)
     com := suriMakeCommand("version")
-    ret, _ := suriSendCommandGetString(conn, com)
+    ret, _ := suriSendCommandGet(conn, com)
 
-    fmt.Println(ret)
+    fmt.Println(ret.(string))
 }
 
 func GetRunningMode() {
@@ -201,9 +201,9 @@ func GetRunningMode() {
 
     suriSendVersion(conn)
     com := suriMakeCommand("running-mode")
-    ret, _ := suriSendCommandGetString(conn, com)
+    ret, _ := suriSendCommandGet(conn, com)
 
-    fmt.Println(ret)
+    fmt.Println(ret.(string))
 }
 
 func GetCaptureMode() {
@@ -212,9 +212,9 @@ func GetCaptureMode() {
 
     suriSendVersion(conn)
     com := suriMakeCommand("capture-mode")
-    ret, _ := suriSendCommandGetString(conn, com)
+    ret, _ := suriSendCommandGet(conn, com)
 
-    fmt.Println(ret)
+    fmt.Println(ret.(string))
 }
 
 func GetProfilingCouters() {

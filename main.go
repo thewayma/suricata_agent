@@ -30,8 +30,13 @@ func main() {
     cron.Collect()
 
     //!< commandTest
+    funcs.GetVersion()
+    funcs.GetRunningMode()
+    funcs.GetCaptureMode()
     funcs.GetUptime()
     funcs.GetAllPortStats()
+    funcs.ReloadRules()
+    funcs.ShutDown()
 
     select {}
 }
