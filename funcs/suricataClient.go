@@ -55,52 +55,19 @@ func suriSendVersion(conn net.Conn) {
 
 func suriSendCommandGet(conn net.Conn, data string) (interface{}, error) {
     conn.Write([]byte(data))
-    //fmt.Printf("SND: %s\n", data)
+    fmt.Printf("SND: %s\n", data)
 
     conn.Read(buf)
-    //fmt.Printf("RCV: %s\n", buf)
+    fmt.Printf("RCV: %s\n", buf)
 
     j, _ := jason.NewObjectFromBytes([]byte(buf))
 
     if res, _ := j.GetString("return"); res == "OK" {
-        return j.GetObject("message")
+        return j, nil
     } else {
         return -299, fmt.Errorf("%s Command Error", data)
     }
 
-}
-
-func suriSendCommandGetInt(conn net.Conn, data string) (int64, error) {
-    conn.Write([]byte(data))
-    //fmt.Printf("SND: %s\n", data)
-
-    conn.Read(buf)
-    //fmt.Printf("RCV: %s\n", buf)
-
-    j, _ := jason.NewObjectFromBytes([]byte(buf))
-
-    if res, _ := j.GetString("return"); res == "OK" {
-        return j.GetInt64("message")
-    } else {
-        return -299, fmt.Errorf("%s Command Error", data)
-    }
-
-}
-
-func suriSendCommandGetString(conn net.Conn, data string) (string, error) {
-    conn.Write([]byte(data))
-    //fmt.Printf("SND: %s\n", data)
-
-    conn.Read(buf)
-    //fmt.Printf("RCV: %s\n", buf)
-
-    j, _ := jason.NewObjectFromBytes([]byte(buf))
-
-    if res, _ := j.GetString("return"); res == "OK" {
-        return j.GetString("message")
-    } else {
-        return "error", fmt.Errorf("%s Command Error", data)
-    }
 }
 
 func suriSendCommandGetIface(conn net.Conn, data string) (interface{}, error) {
@@ -252,7 +219,4 @@ func GetAllPortStats() {
     com := suriMakeCommand("iface-list")
 
     suriSendCommandGetIface(conn, com)
-
-
-
 }
