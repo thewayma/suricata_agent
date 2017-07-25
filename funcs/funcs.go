@@ -16,7 +16,7 @@ func BuildMappers() {
     Mappers = []FuncsAndInterval {
         {
             Fs: []func() []*g.MetricValue {
-                GetUptime,
+                //GetUptime,
             },
             Interval: interval,
         },

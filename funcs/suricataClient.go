@@ -70,7 +70,8 @@ func suriSendCommandGet(conn net.Conn, data string) (interface{}, error) {
 }
 
 //!< 周期性采集
-func GetUptime() []*g.MetricValue {
+//func GetUptime() []*g.MetricValue {
+func GetUptime() int64 {
     conn := suriConnect()
     defer conn.Close()
 
@@ -83,7 +84,8 @@ func GetUptime() []*g.MetricValue {
     uptime, _ := obj.GetInt64("message")
 
     //fmt.Println("Uptime:", g.GaugeValue("suricata_uptime", uptime)
-    return []*g.MetricValue{g.GaugeValue("suricata_uptime", uptime)}
+    //return []*g.MetricValue{g.GaugeValue("suricata_uptime", uptime)}
+    return uptime
 }
 
 //!< 以下为非周期性采集动作

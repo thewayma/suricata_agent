@@ -24,6 +24,7 @@ func main() {
     g.ParseConfig(*cfg)
 
     g.InitLog()
+    g.InitRpcClients()
 
     funcs.BuildMappers()
 

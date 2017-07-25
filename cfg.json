@@ -7,10 +7,16 @@
         "Output": "tty",
         "Type": "text"
     },
-    "Transfer": {
-        "Enabled": false,
-        "Type": "Redis",
-        "Addrs": [
+	"Heartbeat": {
+		"Enabled": true,
+		"Addr": "127.0.0.1:6030",
+		"Interval": 60,
+		"Timeout": 1000
+	},
+	"Transfer": {
+		"Enabled": false,
+		"Type": "Redis",
+		"Addrs": [
             "127.0.0.1:6379"
         ],
         "Interval": 1

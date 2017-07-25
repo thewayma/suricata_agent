@@ -25,6 +25,13 @@ type LogConfig struct {
     Type     string     //!< text, json
 }
 
+type HeartbeatConfig struct {
+    Enabled  bool
+    Addr     string
+    Interval int
+    Timeout  int
+}
+
 type TransferConfig struct {
     Enabled  bool
 	Type	 string     //!< localFile, Redis, RPC, MQ
@@ -37,6 +44,7 @@ type GlobalConfig struct {
 	Ip				string
     UnixSockFile    string
     Log             *LogConfig
+    Heartbeat		*HeartbeatConfig
 	Transfer		*TransferConfig
 }
 
