@@ -17,6 +17,11 @@ func BuildMappers() {
         {
             Fs: []func() []*g.MetricValue {
                 //GetUptime,
+               CpuMetrics,
+               LoadAvgMetrics,
+               MemMetrics,
+               DiskIOMetrics,
+               IOStatsMetrics,
             },
             Interval: interval,
         },
