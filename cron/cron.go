@@ -9,6 +9,14 @@ import (
     "github.com/thewayma/suricata_agent/funcs"
 )
 
+func InitDataHistory() {
+    for {
+        funcs.UpdateCpuStat()
+        funcs.UpdateDiskStats()
+        time.Sleep(time.Second) //!< TODO: hardcode
+    }
+}
+
 func Collect() {
 	if !g.Config().Transfer.Enabled {
 		return

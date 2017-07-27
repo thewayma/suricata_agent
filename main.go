@@ -28,8 +28,10 @@ func main() {
 
     funcs.BuildMappers()
 
+    go cron.InitDataHistory()
     cron.Collect()
 
+    /*
     //!< commandTest
     funcs.GetVersion()
     funcs.GetRunningMode()
@@ -38,6 +40,6 @@ func main() {
     funcs.GetAllPortStats()
     funcs.ReloadRules()
     //funcs.ShutDown()
-
+    */
     select {}
 }
