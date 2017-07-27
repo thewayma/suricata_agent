@@ -9,7 +9,7 @@ import (
     "github.com/thewayma/suricata_agent/funcs"
 )
 
-func InitDataHistory() {
+func PreCollect() {
     for {
         funcs.UpdateCpuStat()
         funcs.UpdateDiskStats()
@@ -26,7 +26,7 @@ func Collect() {
 		return
 	}
 
-	for _, v := range funcs.Mappers {
+	for _, v := range funcs.CollectorFuncs {
 		go collect(int64(v.Interval), v.Fs)
 	}
 }

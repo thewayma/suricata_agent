@@ -8,7 +8,7 @@ import (
 	"github.com/thewayma/suricata_agent/g"
 )
 
-type Dto struct {
+type JsonData struct {
 	Msg  string      `json:"msg"`
 	Data interface{} `json:"data"`
 }
@@ -29,7 +29,7 @@ func RenderJson(w http.ResponseWriter, v interface{}) {
 }
 
 func RenderDataJson(w http.ResponseWriter, data interface{}) {
-	RenderJson(w, Dto{Msg: "success", Data: data})
+	RenderJson(w, JsonData{Msg: "success", Data: data})
 }
 
 func RenderMsgJson(w http.ResponseWriter, msg string) {

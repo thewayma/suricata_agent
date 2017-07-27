@@ -10,10 +10,10 @@ import (
 )
 
 var (
-    HbsClient *SingleConnRpcClient
+    HbsClient *RpcClient
 )
 
-type SingleConnRpcClient struct {
+type RpcClient struct {
 	sync.Mutex
 	rpcClient *rpc.Client
 	RpcServer string
@@ -22,21 +22,21 @@ type SingleConnRpcClient struct {
 
 func InitRpcClients() {
     if Config().Heartbeat.Enabled {
-        HbsClient = &SingleConnRpcClient{
+        HbsClient = &RpcClient{
             RpcServer: Config().Heartbeat.Addr,
             Timeout: time.Duration(Config().Heartbeat.Timeout) * time.Millisecond,
         }
     }
 }
 
-func (this *SingleConnRpcClient) close() {
+func (this *RpcClient) close() {
 	if this.rpcClient != nil {
 		this.rpcClient.Close()
 		this.rpcClient = nil
 	}
 }
 
-func (this *SingleConnRpcClient) serverConn() error {
+func (this *RpcClient) serverConn() error {
 	if this.rpcClient != nil {
 		return nil
 	}
@@ -63,8 +63,7 @@ func (this *SingleConnRpcClient) serverConn() error {
 	}
 }
 
-func (this *SingleConnRpcClient) Call(method string, args interface{}, reply interface{}) error {
-
+func (this *RpcClient) Call(method string, args interface{}, reply interface{}) error {
 	this.Lock()
 	defer this.Unlock()
 

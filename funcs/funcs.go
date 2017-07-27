@@ -9,11 +9,11 @@ type FuncsAndInterval struct {
     Interval int
 }
 
-var Mappers []FuncsAndInterval
+var CollectorFuncs []FuncsAndInterval
 
-func BuildMappers() {
+func GenerateCollectorFuncs() {
     interval := g.Config().Transfer.Interval
-    Mappers = []FuncsAndInterval {
+    CollectorFuncs = []FuncsAndInterval {
         {
             Fs: []func() []*g.MetricValue {
                 //GetUptime,

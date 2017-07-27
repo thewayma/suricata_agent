@@ -27,9 +27,9 @@ func main() {
     g.InitLog()
     g.InitRpcClients()
 
-    funcs.BuildMappers()
+    funcs.GenerateCollectorFuncs()
 
-    go cron.InitDataHistory()
+    go cron.PreCollect()
 
     cron.Collect()
 
