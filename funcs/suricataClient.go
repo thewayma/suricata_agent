@@ -8,6 +8,13 @@ import (
     "github.com/antonholmquist/jason"
 )
 
+type ifStat struct {
+   Iface            string
+   Pkts             int64
+   Drop             int64
+   InvaldChecksum   int64
+}
+
 var (
     protocolMap map[string]string
     buf = make([]byte, 1024)
@@ -69,8 +76,6 @@ func suriSendCommandGet(conn net.Conn, data string) (interface{}, error) {
     }
 }
 
-//!< 周期性采集
-//func GetUptime() []*g.MetricValue {
 func GetUptime() int64 {
     conn := suriConnect()
     defer conn.Close()
@@ -88,8 +93,7 @@ func GetUptime() int64 {
     return uptime
 }
 
-//!< 以下为非周期性采集动作
-func ShutDown() {
+func ShutDown() string {
     conn := suriConnect()
     defer conn.Close()
 
@@ -100,10 +104,11 @@ func ShutDown() {
     obj := ret.(*jason.Object)
     str, _ := obj.GetString("message")
 
-    fmt.Println(str)
+    //fmt.Println(str)
+    return str
 }
 
-func ReloadRules() {
+func ReloadRules() string {
     conn := suriConnect()
     defer conn.Close()
 
@@ -114,10 +119,11 @@ func ReloadRules() {
     obj := ret.(*jason.Object)
     str, _ := obj.GetString("message")
 
-    fmt.Println(str)
+    //fmt.Println(str)
+    return str
 }
 
-func GetVersion() {
+func GetVersion() string {
     conn := suriConnect()
     defer conn.Close()
 
@@ -128,10 +134,11 @@ func GetVersion() {
     obj := ret.(*jason.Object)
     str, _ := obj.GetString("message")
 
-    fmt.Println(str)
+    //fmt.Println(str)
+    return str
 }
 
-func GetRunningMode() {
+func GetRunningMode() string {
     conn := suriConnect()
     defer conn.Close()
 
@@ -142,10 +149,11 @@ func GetRunningMode() {
     obj := ret.(*jason.Object)
     str, _ := obj.GetString("message")
 
-    fmt.Println(str)
+    //fmt.Println(str)
+    return str
 }
 
-func GetCaptureMode() {
+func GetCaptureMode() string {
     conn := suriConnect()
     defer conn.Close()
 
@@ -156,10 +164,11 @@ func GetCaptureMode() {
     obj := ret.(*jason.Object)
     str, _ := obj.GetString("message")
 
-    fmt.Println(str)
+    //fmt.Println(str)
+    return str
 }
 
-func GetProfilingCouters() {
+func GetProfilingCouters() []byte {
     conn := suriConnect()
     defer conn.Close()
 
@@ -171,12 +180,15 @@ func GetProfilingCouters() {
     buf = make([]byte, 10240)
     conn.Read(buf)
 
-    fmt.Printf("ProfilingCounters: %s", buf)
+    //fmt.Printf("ProfilingCounters: %s\n", buf)
+    return buf
 }
 
-func GetAllPortStats() {
+func GetAllPortStats() map[string]*ifStat {
     conn := suriConnect()
     defer conn.Close()
+
+    iStat := make(map[string]*ifStat)
 
     suriSendVersion(conn)
 
@@ -199,8 +211,10 @@ func GetAllPortStats() {
         drop, _    := messObj.GetInt64("drop")
         invalid, _ := messObj.GetInt64("invalid-checksums")
 
-        fmt.Printf("Iface:%s, pkt=%d, drop=%d, invalid-checksums=%d\n", dataItem, pkts, drop, invalid)
+        iStat[dataItem] = &ifStat{dataItem, pkts, drop, invalid}
+
+        //fmt.Printf("Iface:%s, pkt=%d, drop=%d, invalid-checksums=%d\n", dataItem, pkts, drop, invalid)
     }
 
-
+    return iStat
 }

@@ -67,6 +67,6 @@ func collect(sec int64, fns []func() []*g.MetricValue) {
 		}
 
 		//g.SendToTransfer(mvs)
-        log.Debug("Cron:", mvs)
+        log.Debug("\nCron:", mvs)
 	}
 }

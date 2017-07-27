@@ -6,8 +6,9 @@ import (
     "flag"
 
     "github.com/thewayma/suricata_agent/g"
-    "github.com/thewayma/suricata_agent/funcs"
     "github.com/thewayma/suricata_agent/cron"
+    "github.com/thewayma/suricata_agent/http"
+    "github.com/thewayma/suricata_agent/funcs"
 )
 
 func main() {
@@ -29,17 +30,10 @@ func main() {
     funcs.BuildMappers()
 
     go cron.InitDataHistory()
+
     cron.Collect()
 
-    /*
-    //!< commandTest
-    funcs.GetVersion()
-    funcs.GetRunningMode()
-    funcs.GetCaptureMode()
-    funcs.GetUptime()
-    funcs.GetAllPortStats()
-    funcs.ReloadRules()
-    //funcs.ShutDown()
-    */
+    go http.Start()
+
     select {}
 }

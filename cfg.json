@@ -14,11 +14,15 @@
 		"Timeout": 1000
 	},
 	"Transfer": {
-		"Enabled": true,
+		"Enabled": false,
 		"Type": "Redis",
 		"Addrs": [
             "127.0.0.1:6379"
         ],
         "Interval": 1
+    },
+    "Http": {
+        "Enabled": true,
+        "Listen": ":80"
     }
 }

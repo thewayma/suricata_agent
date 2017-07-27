@@ -39,6 +39,11 @@ type TransferConfig struct {
     Interval int        //!< 监控采集周期 
 }
 
+type HttpConfig struct {
+    Enabled  bool
+    Listen   string
+}
+
 type GlobalConfig struct {
 	Hostname		string
 	Ip				string
@@ -46,6 +51,7 @@ type GlobalConfig struct {
     Log             *LogConfig
     Heartbeat		*HeartbeatConfig
 	Transfer		*TransferConfig
+    Http            *HttpConfig
 }
 
 func InitLocalIp() {
