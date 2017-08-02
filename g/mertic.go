@@ -5,28 +5,14 @@ import (
     "strings"
 )
 
-//!< 监控项结果
 type MetricValue struct {
-    Endpoint  string      `json:"endpoint"`
-    Metric    string      `json:"metric"`
-    Value     interface{} `json:"value"`
-    Step      int64       `json:"step"`
-    Type      string      `json:"counterType"`
-    Tags      string      `json:"tags"`
-    Timestamp int64       `json:"timestamp"`
-}
-
-func (this *MetricValue) String() string {
-    return fmt.Sprintf(
-        "<Endpoint:%s, Metric:%s, Type:%s, Tags:%s, Step:%d, Time:%d, Value:%v>",
-        this.Endpoint,
-        this.Metric,
-        this.Type,
-        this.Tags,
-        this.Step,
-        this.Timestamp,
-        this.Value,
-    )
+    Endpoint  string
+    Metric    string
+    Value     interface{}
+    Step      int64
+    Type      string
+    Timestamp int64
+    //Tags    string    //!< tag机制暂时不需要, 每个上传的metric都必须带上Endpoint, Metric !!!
 }
 
 func NewMetricValue(metric string, val interface{}, dataType string, tags ...string) *MetricValue {
@@ -36,12 +22,13 @@ func NewMetricValue(metric string, val interface{}, dataType string, tags ...str
         Type:   dataType,
     }
 
+    /*暂时去掉tag切片
     size := len(tags)
 
     if size > 0 {
         mv.Tags = strings.Join(tags, ",")
     }
-
+    */
     return &mv
 }
 

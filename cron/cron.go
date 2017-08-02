@@ -60,9 +60,10 @@ func collect(sec int64, fns []func() []*g.MetricValue) {
 		}
 
 		now := time.Now().Unix()
-		for j := 0; j < len(mvs); j++ {
+		for j := 0; j < len(mvs); j++ { //!< Metric, Endpoint等在GaugeValue构造填充
 			mvs[j].Step = sec
-			mvs[j].Endpoint = fmt.Sprintf("%s_%s", hostname, ip)
+			//mvs[j].Endpoint = fmt.Sprintf("%s_%s", hostname, ip)
+			mvs[j].Endpoint  = ip
 			mvs[j].Timestamp = now
 		}
 
