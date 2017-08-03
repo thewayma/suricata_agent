@@ -22,6 +22,7 @@ func main() {
     go cron.PreCollect()
 
     cron.Collect()
+    cron.ReportAgentStatus()
 
     go http.Start()
 
