@@ -3,6 +3,7 @@ package g
 import (
     //"fmt"
     "strings"
+    "strconv"
 )
 
 type MetricValue struct {
@@ -15,10 +16,31 @@ type MetricValue struct {
     Timestamp int64       `json:"timestamp"`
 }
 
-func NewMetricValue(metric string, val interface{}, dataType string, tags ...string) *MetricValue {
-    mv := MetricValue {
+type MetricData struct {      //!< 统一agent,transporter data, 减小内存拷贝                 
+    Endpoint    string              `json:"endpoint"`
+    Metric      string              `json:"metric"`
+    Value       float64             `json:"value"`
+    Step        int64               `json:"step"`
+    Type        string              `json:"Type"`
+    Tags        map[string]string   `json:"tags"`
+    Timestamp   int64               `json:"timestamp"`
+}
+
+func NewMetric(metric string, v interface{}, dataType string, tags ...string) *MetricData {
+    //!< 在agent端判断数据类型, 避免transporter的内存拷贝
+    var vv float64
+    switch cv := v.(type) {
+    case string:
+        vv, _ = strconv.ParseFloat(cv, 64)
+    case float64:
+        vv = cv
+    case int64:
+        vv = float64(cv)
+    }
+
+    mv := MetricData {
         Metric: metric,
-        Value:  val,
+        Value:  vv,
         Type:   dataType,
         Tags:   make(map[string]string),
     }
@@ -32,11 +54,11 @@ func NewMetricValue(metric string, val interface{}, dataType string, tags ...str
     return &mv
 }
 
-func GaugeValue(metric string, val interface{}, tags ...string) *MetricValue {
-    return NewMetricValue(metric, val, "GAUGE", tags...)
+func GaugeValue(metric string, val interface{}, tags ...string) *MetricData {
+    return NewMetric(metric, val, "GAUGE", tags...)		//!< 瞬时型监控值
 }
 
-func CounterValue(metric string, val interface{}, tags ...string) *MetricValue {
-    return NewMetricValue(metric, val, "COUNTER", tags...)
+func CounterValue(metric string, val interface{}, tags ...string) *MetricData {
+    return NewMetric(metric, val, "COUNTER", tags...)	//!< 累加型监控值
 }
 

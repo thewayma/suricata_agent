@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func MemMetrics() []*g.MetricValue {
+func MemMetrics() []*g.MetricData {
 	m, err := nux.MemInfo()
 	if err != nil {
 		log.Println(err)
@@ -30,7 +30,7 @@ func MemMetrics() []*g.MetricValue {
 		pswapUsed = float64(m.SwapUsed) * 100.0 / float64(m.SwapTotal)
 	}
 
-	return []*g.MetricValue{
+	return []*g.MetricData{
 		g.GaugeValue("mem.memtotal", m.MemTotal),
 		g.GaugeValue("mem.memused", memUsed),
 		g.GaugeValue("mem.memfree", memFree),

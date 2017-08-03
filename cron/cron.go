@@ -31,7 +31,7 @@ func Collect() {
 	}
 }
 
-func collect(sec int64, fns []func() []*g.MetricValue) {
+func collect(sec int64, fns []func() []*g.MetricData) {
 	t := time.NewTicker(time.Second * time.Duration(sec)).C
 	for {
 		<-t
@@ -43,7 +43,7 @@ func collect(sec int64, fns []func() []*g.MetricValue) {
         */
         ip := g.IP()
 
-		mvs := []*g.MetricValue{}
+		mvs := []*g.MetricData{}
 
 		for _, fn := range fns {
 			items := fn()
@@ -68,12 +68,11 @@ func collect(sec int64, fns []func() []*g.MetricValue) {
 			mvs[j].Endpoint  = ip
 			mvs[j].Timestamp = now
 
-            if len(dt) > 0 {
+            if len(dt) > 0 {            //!< Attach DefaultTags
                 for k, v := range dt {
                     mvs[j].Tags[k] = v
                 }
             }
-
         }
 
         fmt.Printf("%s\n", mvs)

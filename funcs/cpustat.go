@@ -150,9 +150,9 @@ func CpuPrepared() bool {
 	return procStatHistory[1] != nil
 }
 
-func CpuMetrics() []*g.MetricValue {
+func CpuMetrics() []*g.MetricData {
 	if !CpuPrepared() {
-		return []*g.MetricValue{}
+		return []*g.MetricData{}
 	}
 
 	cpuIdleVal := CpuIdle()
@@ -167,17 +167,17 @@ func CpuMetrics() []*g.MetricValue {
 	steal   := g.GaugeValue("cpu.steal", CpuSteal())
 	guest   := g.GaugeValue("cpu.guest", CpuGuest())
 	switches := g.CounterValue("cpu.switches", CurrentCpuSwitches())
-	return []*g.MetricValue{idle, busy, user, nice, system, iowait, irq, softirq, steal, guest, switches}
+	return []*g.MetricData{idle, busy, user, nice, system, iowait, irq, softirq, steal, guest, switches}
 }
 
-func LoadAvgMetrics() []*g.MetricValue {
+func LoadAvgMetrics() []*g.MetricData {
     load, err := nux.LoadAvg()
     if err != nil {
         fmt.Println(err)
         return nil
     }
 
-    return []*g.MetricValue{
+    return []*g.MetricData{
         g.GaugeValue("load.1min", load.Avg1min),
         g.GaugeValue("load.5min", load.Avg5min),
         g.GaugeValue("load.15min", load.Avg15min),

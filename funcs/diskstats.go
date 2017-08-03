@@ -85,7 +85,7 @@ func IODelta(device string, f func([2]*nux.DiskStats) uint64) uint64 {
 	return f(val)
 }
 
-func DiskIOMetrics() (L []*g.MetricValue) {
+func DiskIOMetrics() (L []*g.MetricData) {
 
 	dsList, err := nux.ListDiskStats()
 	if err != nil {
@@ -115,7 +115,7 @@ func DiskIOMetrics() (L []*g.MetricValue) {
 	return
 }
 
-func IOStatsMetrics() (L []*g.MetricValue) {
+func IOStatsMetrics() (L []*g.MetricData) {
 	dsLock.RLock()
 	defer dsLock.RUnlock()
 

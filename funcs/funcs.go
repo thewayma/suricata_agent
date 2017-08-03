@@ -5,7 +5,7 @@ import (
 )
 
 type FuncsAndInterval struct {
-    Fs       []func() []*g.MetricValue
+    Fs       []func() []*g.MetricData
     Interval int
 }
 
@@ -15,7 +15,7 @@ func GenerateCollectorFuncs() {
     interval := g.Config().Transfer.Interval
     CollectorFuncs = []FuncsAndInterval {
         {
-            Fs: []func() []*g.MetricValue {
+            Fs: []func() []*g.MetricData {
                 //GetUptime,
                CpuMetrics,
                LoadAvgMetrics,
