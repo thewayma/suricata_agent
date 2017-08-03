@@ -15,20 +15,20 @@
 	},
 	"Transfer": {
 		"Enabled": true,
-		"Type": "Redis",
 		"Addrs": [
-            "127.0.0.1:6379"
+            "127.0.0.1:8433"
         ],
-        "Interval": 1
+        "Interval": 1,
+        "Timeout": 1000
     },
     "Http": {
         "Enabled": true,
         "Listen": ":80"
     },
     "DefaultTags" : {
-        "Region":   "Beijing",
-        "Az":       "Tucheng",
-        "Department":    "InfoSec",
-        "Group": "CloudSec.IDS"
+        "Region":       "Beijing",
+        "Az":           "Tucheng",
+        "Department":   "InfoSec",
+        "Group":        "CloudSec.IDS"
     }
 }

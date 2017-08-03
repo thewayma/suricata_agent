@@ -35,12 +35,6 @@ func collect(sec int64, fns []func() []*g.MetricData) {
 	t := time.NewTicker(time.Second * time.Duration(sec)).C
 	for {
 		<-t
-        /*
-		hostname, err := g.Hostname()
-		if err != nil {
-			continue
-		}
-        */
         ip := g.IP()
 
 		mvs := []*g.MetricData{}

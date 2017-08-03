@@ -6,16 +6,6 @@ import (
     "strconv"
 )
 
-type MetricValue struct {
-    Endpoint  string      `json:"endpoint"`
-    Metric    string      `json:"metric"`
-    Value     interface{} `json:"value"`
-    Step      int64       `json:"step"`
-    Type      string      `json:"counterType"`
-    Tags      map[string]string `json:"tags"`
-    Timestamp int64       `json:"timestamp"`
-}
-
 type MetricData struct {      //!< 统一agent,transporter data, 减小内存拷贝                 
     Endpoint    string              `json:"endpoint"`
     Metric      string              `json:"metric"`

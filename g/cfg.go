@@ -34,9 +34,9 @@ type HeartbeatConfig struct {
 
 type TransferConfig struct {
     Enabled  bool
-	Type	 string     //!< localFile, Redis, RPC, MQ
-    Addrs    []string   //!< file,      ip:port
-    Interval int        //!< 监控采集周期 
+    Addrs    []string
+    Interval int        //!< 监控项采集周期
+    Timeout  int
 }
 
 type HttpConfig struct {
