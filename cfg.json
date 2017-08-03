@@ -14,7 +14,7 @@
 		"Timeout": 1000
 	},
 	"Transfer": {
-		"Enabled": false,
+		"Enabled": true,
 		"Type": "Redis",
 		"Addrs": [
             "127.0.0.1:6379"

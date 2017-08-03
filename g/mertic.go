@@ -1,7 +1,7 @@
 package g
 
 import (
-    "fmt"
+    //"fmt"
     "strings"
 )
 
@@ -20,11 +20,12 @@ func NewMetricValue(metric string, val interface{}, dataType string, tags ...str
         Metric: metric,
         Value:  val,
         Type:   dataType,
+        Tags:   make(map[string]string),
     }
 
     for _, tag := range tags {
         str := strings.Split(tag, "=")
-        fmt.Println("tagK= ", str[0], "tagV= ", str[1])
+        //fmt.Printf("\n\n\n k=%s, v=%s\n\n\n", str[0], str[1])
         mv.Tags[str[0]] = str[1]
     }
 
@@ -38,3 +39,4 @@ func GaugeValue(metric string, val interface{}, tags ...string) *MetricValue {
 func CounterValue(metric string, val interface{}, tags ...string) *MetricValue {
     return NewMetricValue(metric, val, "COUNTER", tags...)
 }
+

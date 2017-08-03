@@ -100,16 +100,16 @@ func DiskIOMetrics() (L []*g.MetricValue) {
 
 		device := "device=" + ds.Device
 
-		L = append(L, g.CounterValue("disk.io.read_requests", ds.ReadRequests, device))
-		L = append(L, g.CounterValue("disk.io.read_merged", ds.ReadMerged, device))
-		L = append(L, g.CounterValue("disk.io.read_sectors", ds.ReadSectors, device))
-		L = append(L, g.CounterValue("disk.io.msec_read", ds.MsecRead, device))
-		L = append(L, g.CounterValue("disk.io.write_requests", ds.WriteRequests, device))
-		L = append(L, g.CounterValue("disk.io.write_merged", ds.WriteMerged, device))
-		L = append(L, g.CounterValue("disk.io.write_sectors", ds.WriteSectors, device))
-		L = append(L, g.CounterValue("disk.io.msec_write", ds.MsecWrite, device))
-		L = append(L, g.CounterValue("disk.io.ios_in_progress", ds.IosInProgress, device))
-		L = append(L, g.CounterValue("disk.io.msec_total", ds.MsecTotal, device))
+		L = append(L, g.CounterValue("disk.io.read_requests",       ds.ReadRequests, device))
+		L = append(L, g.CounterValue("disk.io.read_merged",         ds.ReadMerged, device))
+		L = append(L, g.CounterValue("disk.io.read_sectors",        ds.ReadSectors, device))
+		L = append(L, g.CounterValue("disk.io.msec_read",           ds.MsecRead, device))
+		L = append(L, g.CounterValue("disk.io.write_requests",      ds.WriteRequests, device))
+		L = append(L, g.CounterValue("disk.io.write_merged",        ds.WriteMerged, device))
+		L = append(L, g.CounterValue("disk.io.write_sectors",       ds.WriteSectors, device))
+		L = append(L, g.CounterValue("disk.io.msec_write",          ds.MsecWrite, device))
+		L = append(L, g.CounterValue("disk.io.ios_in_progress",     ds.IosInProgress, device))
+		L = append(L, g.CounterValue("disk.io.msec_total",          ds.MsecTotal, device))
 		L = append(L, g.CounterValue("disk.io.msec_weighted_total", ds.MsecWeightedTotal, device))
 	}
 	return
