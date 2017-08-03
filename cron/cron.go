@@ -1,7 +1,7 @@
 package cron
 
 import (
-    "fmt"
+    //"fmt"
     "time"
     //"log"
     //log "github.com/sirupsen/logrus"
@@ -37,7 +37,7 @@ func collect(sec int64, fns []func() []*g.MetricData) {
 		<-t
         ip := g.IP()
 
-		mvs := []*g.MetricData{}
+		metrics := []*g.MetricData{}
 
 		for _, fn := range fns {
 			items := fn()
@@ -50,27 +50,26 @@ func collect(sec int64, fns []func() []*g.MetricData) {
 			}
 
 			for _, mv := range items {
-                mvs = append(mvs, mv)
+                metrics = append(metrics, mv)
 			}
 		}
 
         dt := g.Config().DefaultTags
 		now := time.Now().Unix()
-		for j := 0; j < len(mvs); j++ { //!< Metric, Endpoint等在GaugeValue构造填充
-			mvs[j].Step = sec
-			//mvs[j].Endpoint = fmt.Sprintf("%s_%s", hostname, ip)
-			mvs[j].Endpoint  = ip
-			mvs[j].Timestamp = now
+		for j := 0; j < len(metrics); j++ { //!< Metric, Endpoint等在GaugeValue构造填充
+			metrics[j].Step = sec
+			//metrics[j].Endpoint = fmt.Sprintf("%s_%s", hostname, ip)
+			metrics[j].Endpoint  = ip
+			metrics[j].Timestamp = now
 
             if len(dt) > 0 {            //!< Attach DefaultTags
                 for k, v := range dt {
-                    mvs[j].Tags[k] = v
+                    metrics[j].Tags[k] = v
                 }
             }
         }
 
-        fmt.Printf("%s\n", mvs)
-        //g.SendToTransfer(mvs)
-        //log.Debug("\nCron:", mvs)
+        //fmt.Printf("%s\n", metrics)
+        g.SendToTransporter(metrics)
 	}
 }

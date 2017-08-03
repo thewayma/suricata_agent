@@ -141,3 +141,12 @@ func getTransferClient(addr string) *SingleConnRpcClient {
 	}
 	return nil
 }
+
+func SendToTransporter(m []*MetricData) {
+    if len(m) == 0 {
+        return
+    }
+
+    var resp TransferResponse
+    SendMetrics(m, &resp)
+}
