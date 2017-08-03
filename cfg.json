@@ -28,6 +28,7 @@
     "DefaultTags" : {
         "Region":   "Beijing",
         "Az":       "Tucheng",
-        "Group":    "InfoSec"
+        "Department":    "InfoSec",
+        "Group": "CloudSec.IDS"
     }
 }
