@@ -1,7 +1,7 @@
 package cron
 
 import (
-    "fmt"
+    //"fmt"
     "time"
     //"log"
     log "github.com/sirupsen/logrus"
@@ -35,11 +35,12 @@ func collect(sec int64, fns []func() []*g.MetricValue) {
 	t := time.NewTicker(time.Second * time.Duration(sec)).C
 	for {
 		<-t
-
+        /*
 		hostname, err := g.Hostname()
 		if err != nil {
 			continue
 		}
+        */
         ip := g.IP()
 
 		mvs := []*g.MetricValue{}
@@ -59,14 +60,24 @@ func collect(sec int64, fns []func() []*g.MetricValue) {
 			}
 		}
 
+        dt := g.Config().DefaultTags
 		now := time.Now().Unix()
 		for j := 0; j < len(mvs); j++ {
 			mvs[j].Step = sec
-			mvs[j].Endpoint = fmt.Sprintf("%s_%s", hostname, ip)
+			//mvs[j].Endpoint = fmt.Sprintf("%s_%s", hostname, ip)
+			mvs[j].Endpoint = ip
 			mvs[j].Timestamp = now
-		}
 
-		//g.SendToTransfer(mvs)
+            if len(dt) > 0 {
+                for k, v := range dt {
+                    mvs[j].Tags[k] = v
+                }
+            }
+
+        }
+
+
+        //g.SendToTransfer(mvs)
         log.Debug("\nCron:", mvs)
 	}
 }

@@ -52,6 +52,7 @@ type GlobalConfig struct {
     Heartbeat		*HeartbeatConfig
 	Transfer		*TransferConfig
     Http            *HttpConfig
+    DefaultTags     map[string]string
 }
 
 func InitLocalIp() {

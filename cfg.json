@@ -24,5 +24,10 @@
     "Http": {
         "Enabled": true,
         "Listen": ":80"
+    },
+    "DefaultTags" : {
+        "Region":   "Beijing",
+        "Az":       "Tucheng",
+        "Group":    "InfoSec"
     }
 }

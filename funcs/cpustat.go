@@ -156,7 +156,7 @@ func CpuMetrics() []*g.MetricValue {
 	}
 
 	cpuIdleVal := CpuIdle()
-	idle    := g.GaugeValue("cpu.idle", cpuIdleVal)
+	idle    := g.GaugeValue("cpu.idle", cpuIdleVal, "thewayma.cpu=idel")
 	busy    := g.GaugeValue("cpu.busy", 100.0-cpuIdleVal)
 	user    := g.GaugeValue("cpu.user", CpuUser())
 	nice    := g.GaugeValue("cpu.nice", CpuNice())

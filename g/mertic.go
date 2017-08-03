@@ -12,7 +12,7 @@ type MetricValue struct {
     Value     interface{} `json:"value"`
     Step      int64       `json:"step"`
     Type      string      `json:"counterType"`
-    Tags      string      `json:"tags"`
+    Tags      map[string]string `json:"tags"`
     Timestamp int64       `json:"timestamp"`
 }
 
@@ -35,11 +35,18 @@ func NewMetricValue(metric string, val interface{}, dataType string, tags ...str
         Value:  val,
         Type:   dataType,
     }
-
+/*
     size := len(tags)
 
     if size > 0 {
         mv.Tags = strings.Join(tags, ",")
+    }
+*/
+
+    for _, tag := range tags {
+        str := strings.Split(tag, "=")
+        fmt.Println("tagK= ", str[0], "tagV= ", str[1])
+        mv.Tags[str[0]] = str[1]
     }
 
     return &mv
