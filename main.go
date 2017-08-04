@@ -19,7 +19,7 @@ func main() {
 
     funcs.GenerateCollectorFuncs()
 
-    go cron.PreCollect()
+    cron.PreCollect()
     cron.Collect()
     cron.ReportAgentStatus()
 

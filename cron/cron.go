@@ -10,11 +10,13 @@ import (
 )
 
 func PreCollect() {
-    for {
-        funcs.UpdateCpuStat()
-        funcs.UpdateDiskStats()
-        time.Sleep(time.Second) //!< TODO: hardcode
-    }
+    go func() {
+        for {
+            funcs.UpdateCpuStat()
+            funcs.UpdateDiskStats()
+            time.Sleep(time.Second) //!< TODO: hardcode
+        }
+    }()
 }
 
 func Collect() {
