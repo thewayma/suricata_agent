@@ -60,6 +60,6 @@ func Start() {
 		MaxHeaderBytes: 1 << 30,
 	}
 
-	log.Println("listening", addr)
+    g.Log.Info("Agent HTTP listening: %v", addr)
 	log.Fatalln(s.ListenAndServe())
 }

@@ -2,7 +2,6 @@ package g
 
 import (
 	"github.com/toolkits/net"
-	"log"
 	"math"
 	"net/rpc"
 	"sync"
@@ -51,7 +50,7 @@ func (this *RpcClient) serverConn() error {
 
 		this.rpcClient, err = net.JsonRpcClient("tcp", this.RpcServer, this.Timeout)
 		if err != nil {
-			log.Printf("dial %s fail: %v", this.RpcServer, err)
+			Log.Error("dial %s fail: %v", this.RpcServer, err)
 			if retry > 3 {
 				return err
 			}
@@ -82,7 +81,7 @@ func (this *RpcClient) Call(method string, args interface{}, reply interface{}) 
 
 	select {
 	case <-time.After(timeout):
-		log.Printf("[WARN] rpc call timeout %v => %v", this.rpcClient, this.RpcServer)
+		Log.Error("[WARN] rpc call timeout %v => %v", this.rpcClient, this.RpcServer)
 		this.close()
 	case err := <-done:
 		if err != nil {

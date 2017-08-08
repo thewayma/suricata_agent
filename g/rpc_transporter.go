@@ -1,7 +1,6 @@
 package g
 
 import (
-	"log"
 	"sync"
 	"time"
     "net/rpc"
@@ -46,7 +45,7 @@ func (this *SingleConnRpcClient) serverConn() error {
 
         this.rpcClient, err = net.JsonRpcClient("tcp", this.RpcServer, this.Timeout)
         if err != nil {
-            log.Printf("dial %s fail: %v", this.RpcServer, err)
+            Log.Error("dial %s fail: %v", this.RpcServer, err)
             if retry > 3 {
                 return err
             }
@@ -78,7 +77,7 @@ func (this *SingleConnRpcClient) Call(method string, args interface{}, reply int
 
     select {
     case <-time.After(timeout):
-        log.Printf("[WARN] rpc call timeout %v => %v", this.rpcClient, this.RpcServer)
+        Log.Warn("[WARN] rpc call timeout %v => %v", this.rpcClient, this.RpcServer)
         this.close()
     case err := <-done:
         if err != nil {
@@ -126,7 +125,7 @@ func initTransferClient(addr string) *SingleConnRpcClient {
 func updateMetrics(c *SingleConnRpcClient, metrics []*MetricData, resp *TransferResponse) bool {
 	err := c.Call("Transfer.Update", metrics, resp)
 	if err != nil {
-		log.Println("call Transfer.Update fail:", c, err)
+        Log.Error("agent => transporter Transfer.Update RPC fail, Rpc Client:%v, Error Code:%s", c, err)
 		return false
 	}
 	return true
@@ -147,6 +146,10 @@ func SendToTransporter(m []*MetricData) {
         return
     }
 
+    Log.Trace("agent => transporter, Total=%d, MetricData[0]=%v\n", len(m), m[0])
+
     var resp TransferResponse
     SendMetrics(m, &resp)
+
+    Log.Trace("agent <= transporter, Transfered=%d, Latency=%d", resp.Total, resp.Latency)
 }

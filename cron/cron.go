@@ -1,10 +1,7 @@
 package cron
 
 import (
-    //"fmt"
     "time"
-    //"log"
-    //log "github.com/sirupsen/logrus"
     "github.com/thewayma/suricata_agent/g"
     "github.com/thewayma/suricata_agent/funcs"
 )
@@ -71,7 +68,6 @@ func collect(sec int64, fns []func() []*g.MetricData) {
             }
         }
 
-        //fmt.Printf("%s\n", metrics)
         g.SendToTransporter(metrics)
 	}
 }
