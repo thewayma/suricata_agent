@@ -4,7 +4,7 @@
     "UnixSockFile": "/tmp/suricata-bin/var/run/suricata/suricata-command.socket",
     "Log": {
         "LogLevel": "debug",
-        "Output":   "file",
+        "Output":   "file"
     },
 	"Heartbeat": {
 		"Enabled": true,

@@ -2,6 +2,7 @@ package g
 
 import (
 	"os"
+    "log"
     "net"
     "sync"
     "time"
@@ -57,13 +58,13 @@ func InitLocalIp() {
     if Config().Transfer.Enabled {
         conn, err := net.DialTimeout("tcp", Config().Transfer.Addrs[0], time.Second*10)
         if err != nil {
-            Log.Error("get local addr failed !")
+            log.Println("get local addr failed !")
         } else {
             LocalIp = strings.Split(conn.LocalAddr().String(), ":")[0]
             conn.Close()
         }
     } else {
-        Log.Error("hearbeat is not enabled, can't get localip")
+        log.Println("hearbeat is not enabled, can't get localip")
     }
 }
 
@@ -81,7 +82,7 @@ func Hostname() (string, error) {
 
     hostname, err := os.Hostname()
     if err != nil {
-        Log.Error("ERROR: os.Hostname() fail", err)
+        log.Println("ERROR: os.Hostname() fail", err)
     }
     return hostname, err
 }
@@ -102,24 +103,24 @@ func IP() string {
 
 func ParseConfig(cfg string) {
     if cfg == "" {
-        Log.Critical("use -c to specify configuration file")
+        log.Println("use -c to specify configuration file")
     }
 
     if !file.IsExist(cfg) {
-        Log.Critical("config file:", cfg, "is not existent. maybe you need `mv cfg.example.json cfg.json`")
+        log.Println("config file:", cfg, "is not existent. maybe you need `mv cfg.example.json cfg.json`")
     }
 
     ConfigFile = cfg
 
     configContent, err := file.ToTrimString(cfg)
     if err != nil {
-        Log.Critical("read config file:", cfg, "fail:", err)
+        log.Println("read config file:", cfg, "fail:", err)
     }
 
     var c GlobalConfig
     err = json.Unmarshal([]byte(configContent), &c)
     if err != nil {
-        Log.Critical("parse config file:", cfg, "fail:", err)
+        log.Println("parse config file:", cfg, "fail:", err)
     }
 
     lock.Lock()
@@ -127,5 +128,5 @@ func ParseConfig(cfg string) {
 
     config = &c
 
-    Log.Debug("read config file:", cfg, "successfully")
+    log.Println("read config file:", cfg, "successfully")
 }

@@ -10,6 +10,7 @@ var Log = make(log4go.Logger)
 //!< 日志等级从低到高: FINEST, FINE, DEBUG, TRACE, INFO, WARNING, ERROR, CRITICAL
 func InitLog() error {
     loglevel := log4go.INFO
+
     switch Config().Log.LogLevel {
     case "debug":
         loglevel = log4go.DEBUG

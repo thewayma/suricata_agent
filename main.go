@@ -10,10 +10,9 @@ import (
 
 func main() {
     cfg := flag.String("c", "cfg.json", "configuration file")
-
     flag.Parse()
-    g.ParseConfig(*cfg)
 
+    g.ParseConfig(*cfg)
     g.InitLog()
     g.InitRpcClients()
 
