@@ -2,7 +2,6 @@ package cron
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/thewayma/suricata_agent/g"
@@ -49,7 +48,7 @@ func reportAgentStatus(interval time.Duration) {
 		var resp g.SimpleRpcResponse
 		err = g.HbsClient.Call("Agent.ReportStatus", req, &resp)
 		if err != nil || resp.Code != 0 {
-			log.Println("call Agent.ReportStatus fail:", err, "Request:", req, "Response:", resp)
+			g.Log.Error("agent <= heartbeat, Agent.ReportStatus fail:", err, "Request:", req, "Response:", resp)
 		}
 
 		time.Sleep(interval)

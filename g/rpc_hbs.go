@@ -50,7 +50,7 @@ func (this *RpcClient) serverConn() error {
 
 		this.rpcClient, err = net.JsonRpcClient("tcp", this.RpcServer, this.Timeout)
 		if err != nil {
-			Log.Error("dial %s fail: %v", this.RpcServer, err)
+			Log.Error("agent => heartbeat, dial %s fail: %v", this.RpcServer, err)
 			if retry > 3 {
 				return err
 			}
@@ -81,7 +81,7 @@ func (this *RpcClient) Call(method string, args interface{}, reply interface{}) 
 
 	select {
 	case <-time.After(timeout):
-		Log.Error("[WARN] rpc call timeout %v => %v", this.rpcClient, this.RpcServer)
+		Log.Error("agent => heartbeat, [WARN] rpc call timeout %v => %v", this.rpcClient, this.RpcServer)
 		this.close()
 	case err := <-done:
 		if err != nil {
