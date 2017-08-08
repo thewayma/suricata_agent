@@ -3,7 +3,6 @@ package g
 import (
 	"os"
     "net"
-    "log"
     "sync"
     "time"
     "strings"
@@ -20,9 +19,8 @@ var (
 )
 
 type LogConfig struct {
-    LogLevel string     //!< debug, info, warn, error, fatal 日志级别由低到高
-    Output   string     //!< tty, file
-    Type     string     //!< text, json
+    LogLevel string
+    Output   string
 }
 
 type HeartbeatConfig struct {
@@ -59,13 +57,13 @@ func InitLocalIp() {
     if Config().Transfer.Enabled {
         conn, err := net.DialTimeout("tcp", Config().Transfer.Addrs[0], time.Second*10)
         if err != nil {
-            log.Println("get local addr failed !")
+            Log.Error("get local addr failed !")
         } else {
             LocalIp = strings.Split(conn.LocalAddr().String(), ":")[0]
             conn.Close()
         }
     } else {
-        log.Println("hearbeat is not enabled, can't get localip")
+        Log.Error("hearbeat is not enabled, can't get localip")
     }
 }
 
@@ -83,7 +81,7 @@ func Hostname() (string, error) {
 
     hostname, err := os.Hostname()
     if err != nil {
-        log.Println("ERROR: os.Hostname() fail", err)
+        Log.Error("ERROR: os.Hostname() fail", err)
     }
     return hostname, err
 }
@@ -104,24 +102,24 @@ func IP() string {
 
 func ParseConfig(cfg string) {
     if cfg == "" {
-        log.Fatalln("use -c to specify configuration file")
+        Log.Critical("use -c to specify configuration file")
     }
 
     if !file.IsExist(cfg) {
-        log.Fatalln("config file:", cfg, "is not existent. maybe you need `mv cfg.example.json cfg.json`")
+        Log.Critical("config file:", cfg, "is not existent. maybe you need `mv cfg.example.json cfg.json`")
     }
 
     ConfigFile = cfg
 
     configContent, err := file.ToTrimString(cfg)
     if err != nil {
-        log.Fatalln("read config file:", cfg, "fail:", err)
+        Log.Critical("read config file:", cfg, "fail:", err)
     }
 
     var c GlobalConfig
     err = json.Unmarshal([]byte(configContent), &c)
     if err != nil {
-        log.Fatalln("parse config file:", cfg, "fail:", err)
+        Log.Critical("parse config file:", cfg, "fail:", err)
     }
 
     lock.Lock()
@@ -129,5 +127,5 @@ func ParseConfig(cfg string) {
 
     config = &c
 
-    log.Println("read config file:", cfg, "successfully")
+    Log.Debug("read config file:", cfg, "successfully")
 }

@@ -2,7 +2,6 @@ package g
 
 import (
     "os"
-    "log"
     "fmt"
     "runtime"
 )
@@ -19,7 +18,6 @@ func (this *SimpleRpcResponse) String() string {
 
 func init() {
     runtime.GOMAXPROCS(runtime.NumCPU())
-    log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 }
 
 func checkError(err error) {

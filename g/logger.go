@@ -1,41 +1,41 @@
 package g
 
 import (
-    "os"
-    "fmt"
-    log "github.com/sirupsen/logrus"
+    "time"
+    "github.com/alecthomas/log4go"
 )
 
-//!< Debug, Info, Warn, Error, Fatal 日志级别由低到高
-func InitLog() (err error) {
-    //!< tty, file
-    if Config().Log.Output == "file" {
-        logfile, err := os.OpenFile("run.log", os.O_RDWR|os.O_CREATE, 0)
-        if err != nil {
-            fmt.Printf("%s\n", err.Error())
-            os.Exit(-1)
-        }
-        log.SetOutput(logfile)
-    }
+var Log = make(log4go.Logger)
 
-    //!< text, json
-    if Config().Log.Type == "json" {
-        log.SetFormatter(&log.JSONFormatter{})
-    } else {
-        log.SetFormatter(&log.TextFormatter{})
-    }
-
-    //!< debug, info, warn, error, fatal
+//!< 日志等级从低到高: FINEST, FINE, DEBUG, TRACE, INFO, WARNING, ERROR, CRITICAL
+func InitLog() error {
+    loglevel := log4go.INFO
     switch Config().Log.LogLevel {
-    case "info":
-        log.SetLevel(log.InfoLevel)
     case "debug":
-        log.SetLevel(log.DebugLevel)
+        loglevel = log4go.DEBUG
+    case "trace":
+        loglevel = log4go.TRACE
+    case "info":
+        loglevel = log4go.INFO
     case "warn":
-        log.SetLevel(log.WarnLevel)
-    default:
-        log.Fatal("log conf only allow [info, debug, warn], please check your confguire")
+        loglevel = log4go.WARNING
+    case "error":
+        loglevel = log4go.ERROR
+    case "critical":
+        loglevel = log4go.CRITICAL
     }
+
+
+    if Config().Log.Output == "file" {
+        file := log4go.NewFileLogWriter("run.log", true)
+        file.SetRotateLines(3600)
+        file.SetRotateDaily(true)
+        Log.AddFilter("file", loglevel, file)
+    } else if Config().Log.Output == "console" {
+        Log.AddFilter("stdout", loglevel, log4go.NewConsoleLogWriter())
+    }
+
+    Log.Info("Log Framework Inited, Start time: %s", time.Now().Format("15:04:05 MST 2006/01/02"))
 
     return nil
 }
